@@ -15,6 +15,8 @@ const circle = {
 function startGame() {
     drawCircle();
     update();
+    updatePlayer1();
+    updatePlayer2();
 }
 
 function drawCircle() {
@@ -33,21 +35,42 @@ function update() {
     circle.y += circle.dy;
 
     if (circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
-        circle.x = 700
-        circle.y = 400
-        circle.dx *= -1;
+        //  circle.x = 700
+        // circle.y = 400
+        circle.dx *= -1
+
     } else if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
+    }
+    else if (circle.x + circle.y == player2.x + player2.y) {
+        circle.dx *= -1;
 
     }
 
-
-
     requestAnimationFrame(update);
-
 }
 
+function checkCollision() {
 
+    // temporary variables to set edges for testing
+    let testX = circle.x;
+    let testY = circle.y;
+
+    // which edge is closest?
+    if (circle.x < player1.x) testX = player1.x;      // test left edge
+    else if (circle.x > player1.x + player1.width) testX = player1.x + player1.width;   // right edge
+    if (circle.y < player1.y) testY = player.y;      // top edge
+    else if (circle.y > player1.y + player1.height) testY = ry + rh;   // bottom edge
+
+    // get distance from closest edges
+    let distX = circle.x - testX;
+    let distY = circle.y - testY;
+    let distance = sqrt((distX * distX) + (distY * distY));
+
+    if (distance <= circle.size) {
+        console.log('hit');
+    }
+}
 
 const player1 = {
     x: 1,
@@ -82,18 +105,9 @@ function drawPlayer2() {
     ctx.fillStyle = "#ffffff"
     ctx.fillRect(player2.x, player2.y, player2.width, player2.height)
     ctx.fill;
-    console.log(123)
+
 }
 
-function newPos1() {
-    player1.x += player1.dx;
-    player1.y += player1.dy;
-}
-
-function newPos2() {
-    player2.x += player1.dx;
-    player2.y += player1.dy;
-}
 
 function updatePlayer1() {
     ctx.clearRect(0, 0, player1.width, player2.height);
@@ -111,9 +125,7 @@ function updatePlayer2() {
 
 
 
-update();
-updatePlayer1();
-updatePlayer2();
+startGame();
 
 function moveDownPlayer1() {
     player1.y += player1.speed;
@@ -161,4 +173,3 @@ function keyUp(e) {
     }
 }
 
-keyDown();
