@@ -52,6 +52,10 @@ function update() {
 
 
 
+
+
+
+
 const player1 = {
     x: 1,
     y: 450,
@@ -87,8 +91,15 @@ function drawPlayer2() {
     ctx.fill;
 }
 
+function newPos1() {
+    player1.x += player1.dx;
+    player1.y += player1.dy;
+}
 
-
+function newPos2() {
+    player2.x += player1.dx;
+    player2.y += player1.dy;
+}
 
 function updatePlayer1() {
     ctx.clearRect(0, 0, player1.width, player1.height);
@@ -106,7 +117,9 @@ function updatePlayer2() {
 
 
 
-startGame();
+update();
+updatePlayer1();
+updatePlayer2();
 
 function moveDownPlayer1() {
     player1.y += player1.speed;
@@ -153,3 +166,5 @@ function keyUp(e) {
         player2.dy = 0;
     }
 }
+
+keyDown();
