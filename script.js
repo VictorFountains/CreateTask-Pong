@@ -3,7 +3,6 @@ const ctx = canvas.getContext('2d');
 
 
 
-
 const circle = {
     x: 500,
     y: 500,
@@ -33,19 +32,27 @@ function update() {
     circle.y += circle.dy;
 
     if (circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
-        circle.x = 700
-        circle.y = 400
-        circle.dx *= -1;
+
+        if (circle.y > player1.y && circle.y < player1.y + player1.height) {
+            circle.dx *= -1;
+            console.log('hit')
+        } else if (circle.y > player2.y && circle.y < player2.y + player2.height) {
+            circle.dx *= -1;
+        } else {
+            circle.x = 700
+            circle.y = 400
+            circle.dx *= -1;
+        }
     } else if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
-
     }
-
-
-
     requestAnimationFrame(update);
-
 }
+
+
+
+
+
 
 
 
@@ -82,7 +89,6 @@ function drawPlayer2() {
     ctx.fillStyle = "#ffffff"
     ctx.fillRect(player2.x, player2.y, player2.width, player2.height)
     ctx.fill;
-    console.log(123)
 }
 
 function newPos1() {
@@ -96,7 +102,7 @@ function newPos2() {
 }
 
 function updatePlayer1() {
-    ctx.clearRect(0, 0, player1.width, player2.height);
+    ctx.clearRect(0, 0, player1.width, player1.height);
     drawPlayer1();
     requestAnimationFrame(updatePlayer1);
 
