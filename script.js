@@ -2,7 +2,6 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 
-
 const circle = {
     x: 500,
     y: 500,
@@ -41,7 +40,7 @@ function update() {
         } else {
             circle.x = 700
             circle.y = 400
-            circle.dx *= -1;
+            scorePoint();
         }
     } else if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
@@ -114,8 +113,24 @@ function updatePlayer2() {
     requestAnimationFrame(updatePlayer2);
 }
 
+function drawScores(){
+   ctx.beginPath();
+   ctx.fillStyle = "#ffffff";
+    ctx.font = 'px serif';
+  ctx.fillText("Hello world", 600, 200);
+}
+drawScores();
 
 
+function scorePoint(){
+    if (Math.sign(circle.dx) === -1){
+
+        circle.dx *= -1;
+    }
+    else if (Math.sign(circle.dx) === 1){
+        circle.dx *= -1;
+    }
+}
 
 update();
 updatePlayer1();
@@ -168,3 +183,4 @@ function keyUp(e) {
 }
 
 keyDown();
+
