@@ -10,42 +10,91 @@ const circle = {
     dy: 4,
 }
 
+const player1Score = {
+    x: 600,
+    y: 200,
+    value: 0
+}
+
+const player2Score = {
+    x: 1200,
+    y: 200,
+    value: 0
+}
+
+
+
 function startGame() {
-    drawCircle();
+    drawAll();
     update();
 }
 
-function drawCircle() {
+function drawAll() {
     ctx.beginPath()
 
     ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2, true);
     ctx.fillstyle = "#FF0000";
     ctx.fill();
+
+    ctx.fillStyle = "#ffffff"
+    ctx.fillRect(player1.x, player1.y, player1.width, player1.height)
+    ctx.fill;
+
+    ctx.fillStyle = "#ffffff"
+    ctx.fillRect(player2.x, player2.y, player2.width, player2.height)
+    ctx.fill;
+
+    ctx.beginPath();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = '50px serif';
+    ctx.fillText(player1Score.value, player1Score.x, player1Score.y);
+
+    ctx.beginPath();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = '50px serif';
+    ctx.fillText(player2Score.value, player2Score.x, player2Score.y);
+
 }
 
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawCircle();
+    drawAll();
 
     circle.x += circle.dx;
     circle.y += circle.dy;
 
-    if (circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
+    if (circle.x + circle.size > canvas.width) {
 
-        if (circle.y > player1.y && circle.y < player1.y + player1.height) {
+        if (circle.y > player2.y && circle.y < player2.y + player2.height && circle.x > player1.x) {
             circle.dx *= -1;
-            console.log('hit')
-        } else if (circle.y > player2.y && circle.y < player2.y + player2.height) {
-            circle.dx *= -1;
-        } else {
-            circle.x = 700
-            circle.y = 400
+        }
+        else {
+            circle.x = 700;
+            circle.y = 400;
             scorePoint();
         }
-    } else if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
+    }
+    else if (circle.x - circle.size < 0) {
+        if (circle.y > player1.y && circle.y < player1.y + player1.height && circle.x > player1.x) {
+            circle.dx *= -1;
+        } else {
+            circle.x = 700;
+            circle.y = 400;
+            scorePoint();
+        }
+    }
+
+    else if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
     }
+    while (player2.y > circle.y){
+        player2.y -= player2.speed
+    }
+    while (player2.y < circle.y){
+        player2.y += player2.speed
+    }
     requestAnimationFrame(update);
+
 }
 
 
@@ -55,7 +104,7 @@ function update() {
 
 
 
-const player1 = {
+let player1 = {
     x: 1,
     y: 450,
     dx: 0,
@@ -65,7 +114,7 @@ const player1 = {
     height: 170
 }
 
-const player2 = {
+let player2 = {
     x: 1904,
     y: 450,
     dx: 0,
@@ -101,33 +150,27 @@ function newPos2() {
 }
 
 function updatePlayer1() {
-    ctx.clearRect(0, 0, player1.width, player1.height);
-    drawPlayer1();
+    ctx.clearRect(player1.x, player1.y, player1.width, player1.height);
+    drawAll();
     requestAnimationFrame(updatePlayer1);
 
 }
 
 function updatePlayer2() {
-    ctx.clearRect(0, 0, player2.width, player2.height);
-    drawPlayer2();
+    ctx.clearRect(player2.x, player2.y, player2.width, player2.height);
+    drawAll();
     requestAnimationFrame(updatePlayer2);
 }
 
-function drawScores(){
-   ctx.beginPath();
-   ctx.fillStyle = "#ffffff";
-    ctx.font = 'px serif';
-  ctx.fillText("Hello world", 600, 200);
-}
-drawScores();
 
 
-function scorePoint(){
-    if (Math.sign(circle.dx) === -1){
-
+function scorePoint() {
+    if (Math.sign(circle.dx) === -1) {
+        player1Score.value++;
         circle.dx *= -1;
     }
-    else if (Math.sign(circle.dx) === 1){
+    else if (Math.sign(circle.dx) === 1) {
+        player2Score.value++;
         circle.dx *= -1;
     }
 }
@@ -153,34 +196,36 @@ function moveUpPlayer2() {
 }
 
 
-document.addEventListener('keydown', keyDown)
-document.addEventListener('keyup', keyUp)
 
-function keyDown(e) {
-    console.log(e.key);
-    if (e.key === "ArrowUp")
-        moveUpPlayer1();
-    else if (e.key === "ArrowDown")
-        moveDownPlayer1();
-    else if (e.key === "w")
-        moveUpPlayer2();
-    else if (e.key === "s")
-        moveDownPlayer2();
-}
 
-function keyUp(e) {
-    if (
-        e.key == "ArrowUp" ||
-        e.key == "ArrowDown"
-    ) {
-        player1.dy = 0;
-    } else if (
-        e.key == "w" ||
-        e.key == "s"
-    ) {
-        player2.dy = 0;
-    }
-}
+// document.addEventListener('keydown', keyDown)
+// document.addEventListener('keyup', keyUp)
 
-keyDown();
+// function keyDown(e) {
+//     console.log(e.key);
+//     if (e.key === "ArrowUp")
+//         moveUpPlayer1();
+//     else if (e.key === "ArrowDown")
+//         moveDownPlayer1();
+//     else if (e.key === "w")
+//         moveUpPlayer2();
+//     else if (e.key === "s")
+//         moveDownPlayer2();
+// }
+
+// function keyUp(e) {
+//     if (
+//         e.key == "ArrowUp" ||
+//         e.key == "ArrowDown"
+//     ) {
+//         player1.dy = 0;
+//     } else if (
+//         e.key == "w" ||
+//         e.key == "s"
+//     ) {
+//         player2.dy = 0;
+//     }
+// }
+
+// keyDown();
 
