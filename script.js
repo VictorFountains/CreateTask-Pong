@@ -43,6 +43,7 @@ function drawAll() {
     ctx.fillStyle = "#ffffff"
     ctx.fillRect(player2.x, player2.y, player2.width, player2.height)
     ctx.fill;
+    
 
     ctx.beginPath();
     ctx.fillStyle = "#ffffff";
@@ -62,10 +63,16 @@ function update() {
 
     circle.x += circle.dx;
     circle.y += circle.dy;
+    
+    if (player1.y + player1.height < 0 || player1.y - player1.height > canvas.height){
+        player1.dy *= -1;
+    }
+
+    
 
     if (circle.x + circle.size > canvas.width) {
 
-        if (circle.y > player2.y && circle.y < player2.y + player2.height && circle.x > player1.x) {
+        if (circle.y > player2.y && circle.y < player2.y + player2.height && circle.x > player2.x) {
             circle.dx *= -1;
         }
         else {
@@ -87,10 +94,10 @@ function update() {
     else if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
     }
-    while (player2.y > circle.y){
+    while (circle.y < player2.y + player2.height){
         player2.y -= player2.speed
     }
-    while (player2.y < circle.y){
+    while (circle.y > player2.y + player2.height){
         player2.y += player2.speed
     }
     requestAnimationFrame(update);
@@ -119,7 +126,7 @@ let player2 = {
     y: 450,
     dx: 0,
     dy: 0,
-    speed: 8,
+    speed: 9,
     width: 10,
     height: 170
 }
@@ -180,52 +187,56 @@ updatePlayer1();
 updatePlayer2();
 
 function moveDownPlayer1() {
-    player1.y += player1.speed;
+    player1.dy = player1.speed;
+    newPos1();
 }
 
 function moveUpPlayer1() {
-    player1.y -= player1.speed;
+    player1.dy = -player1.speed;
+    newPos1();
 }
 
 function moveDownPlayer2() {
-    player2.y += player2.speed;
+    player2.dy = player2.speed;
+    newPos1();
 }
 
 function moveUpPlayer2() {
-    player2.y -= player2.speed;
+    player2.dy = -player2.speed;
+    newPos1();
 }
 
 
 
 
-// document.addEventListener('keydown', keyDown)
-// document.addEventListener('keyup', keyUp)
+document.addEventListener('keydown', keyDown)
+document.addEventListener('keyup', keyUp)
 
-// function keyDown(e) {
-//     console.log(e.key);
-//     if (e.key === "ArrowUp")
-//         moveUpPlayer1();
-//     else if (e.key === "ArrowDown")
-//         moveDownPlayer1();
-//     else if (e.key === "w")
-//         moveUpPlayer2();
-//     else if (e.key === "s")
-//         moveDownPlayer2();
-// }
+function keyDown(e) {
+    console.log(e.key);
+    if (e.key === "ArrowUp")
+        moveUpPlayer1();
+    else if (e.key === "ArrowDown")
+        moveDownPlayer1();
+    else if (e.key === "w")
+        moveUpPlayer2();
+    else if (e.key === "s")
+        moveDownPlayer2();
+}
 
-// function keyUp(e) {
-//     if (
-//         e.key == "ArrowUp" ||
-//         e.key == "ArrowDown"
-//     ) {
-//         player1.dy = 0;
-//     } else if (
-//         e.key == "w" ||
-//         e.key == "s"
-//     ) {
-//         player2.dy = 0;
-//     }
-// }
+function keyUp(e) {
+    if (
+        e.key == "ArrowUp" ||
+        e.key == "ArrowDown"
+    ) {
+        player1.dy = 0;
+    } else if (
+        e.key == "w" ||
+        e.key == "s"
+    ) {
+        player2.dy = 0;
+    }
+}
 
-// keyDown();
+keyDown();
 
