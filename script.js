@@ -5,9 +5,9 @@ const ctx = canvas.getContext('2d');
 const circle = {
     x: 500,
     y: 500,
-    size: 15,
-    dx: 5,
-    dy: 4,
+    size: 10,
+    dx: 10,
+    dy: 7.5,
 }
 
 const player1Score = {
@@ -21,6 +21,7 @@ const player2Score = {
     y: 200,
     value: 0
 }
+
 
 
 
@@ -43,7 +44,7 @@ function drawAll() {
     ctx.fillStyle = "#ffffff"
     ctx.fillRect(player2.x, player2.y, player2.width, player2.height)
     ctx.fill;
-    
+
 
     ctx.beginPath();
     ctx.fillStyle = "#ffffff";
@@ -63,17 +64,17 @@ function update() {
 
     circle.x += circle.dx;
     circle.y += circle.dy;
-    
-    if (player1.y + player1.height < 0 || player1.y - player1.height > canvas.height){
+
+    if (player1.y + player1.height < 0 || player1.y - player1.height > canvas.height) {
         player1.dy *= -1;
     }
 
-    
 
     if (circle.x + circle.size > canvas.width) {
 
-        if (circle.y > player2.y && circle.y < player2.y + player2.height && circle.x > player2.x) {
+        if (circle.y > player2.y && circle.y < player2.y + player2.height && circle.x > player1.x) {
             circle.dx *= -1;
+
         }
         else {
             circle.x = 700;
@@ -84,7 +85,9 @@ function update() {
     else if (circle.x - circle.size < 0) {
         if (circle.y > player1.y && circle.y < player1.y + player1.height && circle.x > player1.x) {
             circle.dx *= -1;
+
         } else {
+
             circle.x = 700;
             circle.y = 400;
             scorePoint();
@@ -94,19 +97,26 @@ function update() {
     else if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
     }
-    while (circle.y < player2.y + player2.height){
-        player2.y -= player2.speed
-    }
-    while (circle.y > player2.y + player2.height){
-        player2.y += player2.speed
-    }
-    requestAnimationFrame(update);
 
+    movePlayer2Up();
+    movePlayer2Down();
 }
 
 
-
-
+function movePlayer2Up() {
+    do {
+        moveUpPlayer2();
+        player2.y += player2.dy;
+    }
+    while (circle.y < player2.y + (player2.height / 2))
+}
+function movePlayer2Down() {
+    do {
+        moveDownPlayer2();
+        player2.y += player2.dy;
+    }
+    while (circle.y > player2.y + (player2.height / 2))
+}
 
 
 
@@ -116,17 +126,17 @@ let player1 = {
     y: 450,
     dx: 0,
     dy: 0,
-    speed: 8,
+    speed: 5,
     width: 10,
     height: 170
 }
 
 let player2 = {
-    x: 1904,
+    x: 1902,
     y: 450,
     dx: 0,
     dy: 0,
-    speed: 9,
+    speed: 0,
     width: 10,
     height: 170
 }
@@ -152,8 +162,8 @@ function newPos1() {
 }
 
 function newPos2() {
-    player2.x += player1.dx;
-    player2.y += player1.dy;
+    player2.x += player2.dx;
+    player2.y += player2.dy;
 }
 
 function updatePlayer1() {
@@ -197,13 +207,13 @@ function moveUpPlayer1() {
 }
 
 function moveDownPlayer2() {
-    player2.dy = player2.speed;
-    newPos1();
+    player2.dy = 1
+
 }
 
 function moveUpPlayer2() {
-    player2.dy = -player2.speed;
-    newPos1();
+    player2.dy = -3
+
 }
 
 
