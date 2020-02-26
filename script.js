@@ -6,12 +6,12 @@ const circle = {
     x: 500,
     y: 500,
     size: 10,
-    dx: 5,
-    dy: 4,
+    dx: 8,
+    dy: 5,
 }
 
 const player1Score = {
-    x: 550,
+    x: 600,
     y: 200,
     value: 0
 }
@@ -22,13 +22,18 @@ const player2Score = {
     value: 0
 }
 
+
+
+
 function startGame() {
-    drawCircle();
+    drawAll();
     update();
 }
 
-function drawGame() {
+
+function drawAll() {
     ctx.beginPath()
+
 
     ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2, true);
     ctx.fillstyle = "#FF0000";
@@ -42,67 +47,112 @@ function drawGame() {
     ctx.fillRect(player2.x, player2.y, player2.width, player2.height)
     ctx.fill;
 
+
+    ctx.beginPath();
     ctx.fillStyle = "#ffffff";
-    ctx.font = '30px serif';
+    ctx.font = '50px serif';
     ctx.fillText(player1Score.value, player1Score.x, player1Score.y);
 
+    ctx.beginPath();
     ctx.fillStyle = "#ffffff";
-    ctx.font = '30px serif';
+    ctx.font = '50px serif';
     ctx.fillText(player2Score.value, player2Score.x, player2Score.y);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (checkWin) {
+        return;
+    } else {
+        null
+    }
 }
 
 function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawGame();
+    drawAll();
+
 
     circle.x += circle.dx;
     circle.y += circle.dy;
 
-    if (circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
+    if (player1.y + player1.height < 0 || player1.y - player1.height > canvas.height) {
+        player1.dy *= -1;
+    }
 
-        if (circle.y > player1.y && circle.y < player1.y + player1.height) {
+
+    if (circle.x + circle.size > canvas.width) {
+
+        if (circle.y > player2.y && circle.y < player2.y + player2.height && circle.x > player1.x) {
             circle.dx *= -1;
-        } else if (circle.y > player2.y && circle.y < player2.y + player2.height) {
-            circle.dx *= -1;
+
         } else {
-            circle.x = 700
-            circle.y = 400
+            circle.x = 700;
+            circle.y = 400;
+            scorePoint();
+        }
+    } else if (circle.x - circle.size < 0) {
+        if (circle.y > player1.y && circle.y < player1.y + player1.height && circle.x > player1.x) {
+            circle.dx *= -1;
+
+        } else {
+
+            circle.x = 700;
+            circle.y = 400;
             scorePoint();
         }
     } else if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
         circle.dy *= -1;
     }
+
+    function movePlayer2() {
+        if (circle.y < player2.y + (player2.height / 2)) {
+            player2.y += player2.dy;
+            moveUpPlayer2();
+        } else {
+            moveDownPlayer2();
+            player2.y += player2.dy;
+        }
+    }
+    movePlayer2();
     requestAnimationFrame(update);
+
 }
 
 
 
 
 
-
-
-
-const player1 = {
+let player1 = {
     x: 1,
     y: 450,
     dx: 0,
     dy: 0,
-    speed: 8,
+    speed: 5,
     width: 10,
     height: 170
 }
 
-const player2 = {
-    x: 1904,
+let player2 = {
+    x: 1902,
     y: 450,
     dx: 0,
     dy: 0,
-    speed: 8,
+    speed: 0,
     width: 10,
     height: 170
 }
 
+function drawPlayer1() {
+    ctx.fillStyle = "#ffffff"
+    ctx.fillRect(player1.x, player1.y, player1.width, player1.height)
+    ctx.fill;
 
+}
+
+
+
+function drawPlayer2() {
+    ctx.fillStyle = "#ffffff"
+    ctx.fillRect(player2.x, player2.y, player2.width, player2.height)
+    ctx.fill;
+}
 
 function newPos1() {
     player1.x += player1.dx;
@@ -110,95 +160,100 @@ function newPos1() {
 }
 
 function newPos2() {
-    player2.x += player1.dx;
-    player2.y += player1.dy;
+    player2.x += player2.dx;
+    player2.y += player2.dy;
 }
 
 function updatePlayer1() {
-    ctx.clearRect(0, 0, player1.width, player1.height);
-    drawGame();
+    ctx.clearRect(player1.x, player1.y, player1.width, player1.height);
+    drawAll();
     requestAnimationFrame(updatePlayer1);
 
 }
 
 function updatePlayer2() {
-    ctx.clearRect(0, 0, player2.width, player2.height);
-    drawGame();
+    ctx.clearRect(player2.x, player2.y, player2.width, player2.height);
+    drawAll();
     requestAnimationFrame(updatePlayer2);
 }
 
 
-function updateScores() {
-    drawGame();
-    requestAnimationFrame(updateScores);
-}
-updateScores();
-
 
 function scorePoint() {
     if (Math.sign(circle.dx) === -1) {
-        player2Score.value += 1;
+        player1Score.value++;
         circle.dx *= -1;
+        checkWin();
     } else if (Math.sign(circle.dx) === 1) {
-        player1Score.value += 1;
+        player2Score.value++;
         circle.dx *= -1;
-        //     } else if (player1Score.value >= 5 || player2Score.value >= 5) {
-        //         checkWin();
-        //     }
-        // }
+        checkWin();
+    }
+}
 
-        // function checkWin() {
-        //     console.log('blah')
-        // }
+update();
+updatePlayer1();
+updatePlayer2();
 
-        update();
-        updatePlayer1();
-        updatePlayer2();
+function moveDownPlayer1() {
+    player1.dy = player1.speed;
+    newPos1();
+}
 
-        function moveDownPlayer1() {
-            player1.y += player1.speed;
-        }
+function moveUpPlayer1() {
+    player1.dy = -player1.speed;
+    newPos1();
+}
 
-        function moveUpPlayer1() {
-            player1.y -= player1.speed;
-        }
+function moveDownPlayer2() {
+    player2.dy = 3
 
-        function moveDownPlayer2() {
-            player2.y += player2.speed;
-        }
+}
 
-        function moveUpPlayer2() {
-            player2.y -= player2.speed;
-        }
+function moveUpPlayer2() {
+    player2.dy = -3
+
+}
+
+function checkWin() {
+    if (player1Score.value === 3) {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.beginPath();
+        requestAnimationFrame(checkWin);
+        console.log('win!')
+    } else {
+        console.log('test')
+    }
+}
 
 
-        document.addEventListener('keydown', keyDown)
-        document.addEventListener('keyup', keyUp)
+document.addEventListener('keydown', keyDown)
+document.addEventListener('keyup', keyUp)
 
-        function keyDown(e) {
-            console.log(e.key);
-            if (e.key === "ArrowUp")
-                moveUpPlayer1();
-            else if (e.key === "ArrowDown")
-                moveDownPlayer1();
-            else if (e.key === "w")
-                moveUpPlayer2();
-            else if (e.key === "s")
-                moveDownPlayer2();
-        }
+function keyDown(e) {
+    console.log(e.key);
+    if (e.key === "ArrowUp")
+        moveUpPlayer1();
+    else if (e.key === "ArrowDown")
+        moveDownPlayer1();
+    else if (e.key === "w")
+        moveUpPlayer2();
+    else if (e.key === "s")
+        moveDownPlayer2();
+}
 
-        function keyUp(e) {
-            if (
-                e.key == "ArrowUp" ||
-                e.key == "ArrowDown"
-            ) {
-                player1.dy = 0;
-            } else if (
-                e.key == "w" ||
-                e.key == "s"
-            ) {
-                player2.dy = 0;
-            }
-        }
+function keyUp(e) {
+    if (
+        e.key == "ArrowUp" ||
+        e.key == "ArrowDown"
+    ) {
+        player1.dy = 0;
+    } else if (
+        e.key == "w" ||
+        e.key == "s"
+    ) {
+        player2.dy = 0;
+    }
+}
 
-        keyDown();
+keyDown();
