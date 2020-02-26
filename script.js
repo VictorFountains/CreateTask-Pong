@@ -32,7 +32,7 @@ function startGame() {
 
 
 function drawAll() {
-    ctx.beginPath()
+    ctx.beginPath();
 
 
     ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2, true);
@@ -58,14 +58,12 @@ function drawAll() {
     ctx.font = '50px serif';
     ctx.fillText(player2Score.value, player2Score.x, player2Score.y);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (checkWin) {
-        return;
-    } else {
-        null
-    }
+   
+    // checkWin();
 }
 
 function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawAll();
 
 
@@ -183,11 +181,11 @@ function scorePoint() {
     if (Math.sign(circle.dx) === -1) {
         player1Score.value++;
         circle.dx *= -1;
-        checkWin();
+        // checkWin();
     } else if (Math.sign(circle.dx) === 1) {
         player2Score.value++;
         circle.dx *= -1;
-        checkWin();
+        // checkWin();
     }
 }
 
@@ -215,16 +213,16 @@ function moveUpPlayer2() {
 
 }
 
-function checkWin() {
-    if (player1Score.value === 3) {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.beginPath();
-        requestAnimationFrame(checkWin);
-        console.log('win!')
-    } else {
-        console.log('test')
-    }
-}
+// function checkWin() {
+//     if (player1Score.value === 3) {
+//         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+//         ctx.beginPath();
+//         console.log('win!')
+//     } else {
+//         console.log('test')
+//     }
+//     requestAnimationFrame(checkWin);
+// }
 
 
 document.addEventListener('keydown', keyDown)
